@@ -41,13 +41,17 @@ RUN cd /tmp && \
 # install cmake latest
 RUN pip install cmake --upgrade
 
-ARG DOTNET_VERSION=9.0
+ARG DOTNET_VERSION
 ARG DOTNET_INSTALL_DIR=/build/ci/cache/.dotnet
 
 ENV PATH="/usr/local/bin:/usr/local/gcc-11/bin:${PATH}:/usr/share/dotnet"
 # install dotnet with cache mount
+# Strip .x suffix from DOTNET_VERSION for the install script (e.g., 10.0.x -> 10.0)
 RUN --mount=type=cache,target=/tmp/dotnet-cache \
-    /usr/share/dotnet/dotnet --info || curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin -Channel $DOTNET_VERSION -InstallDir /usr/share/dotnet
+    if [ ! -f /usr/share/dotnet/dotnet ]; then \
+        INSTALL_VERSION=$(echo $DOTNET_VERSION | sed 's/\.x$//'); \
+        curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --channel $INSTALL_VERSION --install-dir /usr/share/dotnet; \
+    fi
 RUN ln -s /usr/share/dotnet/dotnet /usr/bin/dotnet
 
 ARG TARGETPLATFORM
