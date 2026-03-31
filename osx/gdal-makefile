@@ -4,20 +4,21 @@
 
 include RID.opt
 include ../shared/GdalCore.opt
+include ../shared/common.mk
 
 # default targets on osx
 TARGETS = hdf proj gdal
 
 all: $(TARGETS)
-	@echo "$(PRE) Everything looks good. Linux libraries for GDAL is ready to packaging!"
-	@echo "$(PRE) Installed libraries (vcpkg static): $(VCPKG_REQUIRE_OSX)"
-	@echo "$(PRE) Installed libraries (vcpkg dynamic): $(VCPKG_REQUIRE_OSX_DYNAMIC)"
-	@echo "$(PRE) Compiled libraries: $(TARGETS)"
+	@echo "$(LOG_PREFIX) Everything looks good. Linux libraries for GDAL is ready to packaging!"
+	@echo "$(LOG_PREFIX) Installed libraries (vcpkg static): $(VCPKG_REQUIRE_OSX)"
+	@echo "$(LOG_PREFIX) Installed libraries (vcpkg dynamic): $(VCPKG_REQUIRE_OSX_DYNAMIC)"
+	@echo "$(LOG_PREFIX) Compiled libraries: $(TARGETS)"
 
 pre_vcpkg:
-	@echo "$(PRE) Precheck for VCPKG libraries installation..."
+	@echo "$(LOG_PREFIX) Precheck for VCPKG libraries installation..."
 	$(MAKE) -f vcpkg-makefile
-	@echo "$(PRE) VCPKG libraries precheck complete"
+	@echo "$(LOG_PREFIX) VCPKG libraries precheck complete"
 
 complete: pre_vcpkg all
 	@exit 0
@@ -26,76 +27,8 @@ complete: pre_vcpkg all
 force: $(addsuffix -force, $(TARGETS))
 	@exit 0
 
-# lower and uppercase funcs
-UP  = $(shell echo '$*' | tr a-z A-Z)
-LW = $(shell echo '$*' | tr A-Z a-z)
-
-# add support for [-force] param
-REP = $(shell echo '$(LW)' | sed "s/-force//g")
-
-# target pretty output
-TO = $(PRE) ${UP} |
-SHELL=/bin/bash
-
-# accepts any user params
-% :
-ifneq ($(filter $(REP),$(TARGETS)),'')
-	@echo "$(TO) trying to make stuff for => $(REP)"
-
-	@if [ ! -d "$(BUILD_ROOT)/$(REP)-build" ] || [[ "$(LW)" == *"-force" ]]; then \
-		$(MAKE) -f gdal-makefile init_$(REP) || exit 1; \
-		$(MAKE) -f gdal-makefile configure_$(REP) || exit 1; \
-		$(MAKE) -f gdal-makefile build_$(REP) || exit 1; \
-	else \
-		echo "$(PRE) Build folder exists $(BUILD_ROOT)/$(REP)-build"; \
-		echo "$(PRE) To rebuild add '$(REP)-force'"; \
-	fi;
-else
-	@echo "$(PRE) Can not make $(REP)"
-endif
-
-init_%:
-	$(MAKE) -f gdal-makefile clone_$(REP)
-	$(MAKE) -f gdal-makefile reset_$(REP); 
-	$(MAKE) -f gdal-makefile remove_cache_$(REP)
-	@echo "$(TO) Sources restore complete"
-
-clone_%:
-	@if [ ! -d "$($(UP)_ROOT)" ]; then \
-		$(GIT) clone $(GIT_CLONE_DEPTH) --single-branch -b $($(UP)_COMMIT_VER) $($(UP)_REPO) $($(UP)_ROOT); \
-	fi;
-
-reset_%:
-	@echo "$(TO) Restoring $(LW) sources version to $($(UP)_COMMIT_VER)"
-	@echo "$(TO) Checking for remote changes..."
-	@cd $($(UP)_ROOT) && git fetch origin 'refs/tags/*:refs/tags/*' --force
-	@cd $($(UP)_ROOT) && git checkout -q tags/$($(UP)_COMMIT_VER) --force || exit 1
-	@echo "$(TO) Resetting sources..."
-	@cd $($(UP)_ROOT) && git reset --hard || exit 1
-	@echo "$(TO) Cleaning the repo before compiling from scratch..."
-	@cd $($(UP)_ROOT) && $(GIT_CLEAN) || exit 1
-
-init_hdf: check_hdf_sources
-	@echo "$(TO) HDF sources restore complete"
-
-HDF_zip=hdf$(HDF_VERSION).zip
-HDF_SOURCE=$(BUILD_ROOT)/hdf4-hdf$(HDF_VERSION)
-
-download_hdf:
-	@echo "$(TO) Downloading HDF source ${HDF_zip}..."
-	LD_LIBRARY_PATH="" curl -JL "https://github.com/HDFGroup/hdf4/archive/refs/tags/$(HDF_zip)" -o "$(BUILD_ROOT)/$(HDF_zip)"
-	@echo "$(TO) HDF source downloaded!"
-	@echo "$(TO) Extracting HDF source..."
-	cd "$(BUILD_ROOT)"; unzip -oq "$(BUILD_ROOT)/$(HDF_zip)" -d .
-
-
-check_hdf_sources:
-	@if [[ ! -f "$(BUILD_ROOT)/$(HDF_zip)" ]] || [[ ! -d "$(HDF_SOURCE)" ]]; then \
-		$(MAKE) -f gdal-makefile download_hdf; \
-	fi;
-
 configure_hdf:
-	@echo "$(TO) HDF Configuring..."
+	@echo "$(TARGET_PREFIX) HDF Configuring..."
 
 	@if [[ -d "$(BUILD_ROOT)/hdf-cmake-temp" ]]; then rm "$(BUILD_ROOT)/hdf-cmake-temp/CMakeCache.txt"; fi;
 	@if [[ -d "$(BUILD_ROOT)/hdf-build" ]]; then rm -r "$(BUILD_ROOT)/hdf-build"; fi;
@@ -110,18 +43,12 @@ configure_hdf:
 		-DCMAKE_PREFIX_PATH=$(VCPKG_INSTALLED_DYNAMIC) \
 		-DCMAKE_OSX_DEPLOYMENT_TARGET=$(OSX_DEPLOYMENT_TARGET) || exit 1
 
-	@echo "$(TO) HDF was configured!"
-
-remove_cache_%:
-	@echo "$(TO) Removing build cache..."
-	@if [[ -d "$($(UP)_CMAKE_TMP)" ]]; then \
-		rm -r $($(UP)_CMAKE_TMP); \
-	fi;
+	@echo "$(TARGET_PREFIX) HDF was configured!"
 
 configure_gdal:
-	@echo "$(TO) GDAL Configuring..."
+	@echo "$(TARGET_PREFIX) GDAL Configuring..."
 	@cd $(GDAL_ROOT) && \
-		git apply "$(ROOTDIR_)/shared/patch/CMakeLists.txt.patch" || exit 1
+		git apply "$(ROOT_DIR)/shared/patch/CMakeLists.txt.patch" || exit 1
 
 	@if [[ -d "$(BUILD_ROOT)/gdal-cmake-temp" ]]; then rm "$(BUILD_ROOT)/gdal-cmake-temp/CMakeCache.txt"; fi;
 	@if [[ -d "$(BUILD_ROOT)/gdal-build" ]]; then rm -r "$(BUILD_ROOT)/gdal-build"; fi;
@@ -162,10 +89,10 @@ configure_gdal:
 
 # openexr half was moved to imath
 
-	@echo "$(TO) GDAL was configured!"
+	@echo "$(TARGET_PREFIX) GDAL was configured!"
 
 configure_proj:
-	@echo "$(TO) PROJ Configuring..."
+	@echo "$(TARGET_PREFIX) PROJ Configuring..."
 
 	@if [[ -d "$(BUILD_ROOT)/proj-cmake-temp" ]]; then rm "$(BUILD_ROOT)/proj-cmake-temp/CMakeCache.txt"; fi;
 	@if [[ -d "$(BUILD_ROOT)/proj-build" ]]; then rm -r "$(BUILD_ROOT)/proj-build"; fi;
@@ -190,12 +117,7 @@ configure_proj:
 			-DCMAKE_OSX_DEPLOYMENT_TARGET=$(OSX_DEPLOYMENT_TARGET) \
 			|| exit 1
 
-	@echo "$(TO) PROJ was configured!"
-
-build_%:
-	@echo "$(TO) $(LW) Building..."
-	@cd "$(BUILD_ROOT)/$(LW)-cmake-temp" && cmake --build . -j4 --target install || exit 1
-	@echo "$(TO) $(LW) was built successfully!"
+	@echo "$(TARGET_PREFIX) PROJ was configured!"
 
 __DYLIBS_GDAL=DYLD_FALLBACK_LIBRARY_PATH=$(DYLD_FALLBACK_LIBRARY_PATH):$(BUILD_ROOT)/gdal-build/lib
 formats-output:
@@ -208,9 +130,6 @@ formats-output:
 
 	@(cd $(BUILD_ROOT)/gdal-build/bin && $(__DYLIBS_GDAL) \
 		./ogrinfo --formats > $(TEST_FORMATS_OUTPUT)/gdal-formats-osx-vector.txt)
-
-reset: reset_proj reset_gdal
-	@echo "$(TO) Reset ALL is complete"
 
 .EXPORT_ALL_VARIABLES:
 PKG_CONFIG_PATH=$(VCPKG_INSTALLED_DYNAMIC)/lib/pkgconfig

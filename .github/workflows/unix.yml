@@ -65,7 +65,7 @@ jobs:
           key: ${{ matrix.os }}-buildx-${{ matrix.arch }}-${{ github.run_id }}
           restore-keys: |
             ${{ matrix.os }}-buildx-${{ matrix.arch }}-
-      
+
       - name: Ensure cache directories
         run: |
           mkdir -p ci/cache/.dotnet

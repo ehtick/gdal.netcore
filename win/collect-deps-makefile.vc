@@ -11,7 +11,7 @@ TOOLS_OUTPUT=$(abspath $(PACKAGE_BUILD_ROOT)/tools/$(RID))
 BUILD_ROOT=$(abspath $(BUILD_ROOT))
 BINDINGS_ROOT=$(abspath $(GDAL_CMAKE_TMP)/swig/csharp)
 BINDINGS_OUT=$(abspath $(BASE)/bindings)
-SDK_ROOT=$(ROOTDIR_)/build-win/sdk/release-1930-x64
+SDK_ROOT=$(ROOT_DIR)/build-win/sdk/release-1930-x64
 
 all: clean_output collect
 
