@@ -40,7 +40,7 @@ function Set-GdalVariables {
 function Get-7ZipInstallation {   
     Write-BuildStep "Checking for 7z installation"
     New-FolderIfNotExists $env:7Z_ROOT 
-    $env:7Z_URL = "https://www.7-zip.org/a/7z2107-extra.7z"
+    $env:7Z_URL = "https://www.7-zip.org/a/7z2501-extra.7z"
     if (-Not (Test-Path -Path "$env:7Z_ROOT\7za.exe" -PathType Leaf)) { 
         Invoke-WebRequest "$env:7Z_URL" -OutFile "$env:7Z_ROOT\7z.7z"
         Expand-PscxArchive -Path "$env:7Z_ROOT\7z.7z" -OutputPath "$env:7Z_ROOT\"
