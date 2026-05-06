@@ -35,6 +35,7 @@ try {
 
     Get-VcpkgInstallation -bootstrapVcpkg $bootstrapVcpkg
 
+    Write-BuildInfo "Using shared vcpkg authority files shared/vcpkg.json, shared/vcpkg-configuration.json, and shared/vcpkg-lock.json"
     Install-VcpkgPackagesSharedConfig $installVcpkgPackages
 
     Get-GdalSdkIsAvailable

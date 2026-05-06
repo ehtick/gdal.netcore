@@ -11,8 +11,7 @@ TARGETS = hdf proj gdal
 
 all: $(TARGETS)
 	@echo "$(LOG_PREFIX) Everything looks good. Linux libraries for GDAL is ready to packaging!"
-	@echo "$(LOG_PREFIX) Installed libraries (vcpkg static): $(VCPKG_REQUIRE_OSX)"
-	@echo "$(LOG_PREFIX) Installed libraries (vcpkg dynamic): $(VCPKG_REQUIRE_OSX_DYNAMIC)"
+	@echo "$(LOG_PREFIX) Installed libraries (vcpkg): shared manifest features"
 	@echo "$(LOG_PREFIX) Compiled libraries: $(TARGETS)"
 
 pre_vcpkg:
@@ -34,7 +33,7 @@ configure_hdf:
 	@if [[ -d "$(BUILD_ROOT)/hdf-build" ]]; then rm -r "$(BUILD_ROOT)/hdf-build"; fi;
 
 	-mkdir -p $(HDF_CMAKE_TMP)
-	@cd $(HDF_CMAKE_TMP) && cmake $(HDF_SOURCE) \
+	@cd $(HDF_CMAKE_TMP) && cmake $(HDF_ROOT) \
 		-DCMAKE_INSTALL_PREFIX=$(BUILD_ROOT)/hdf-build -Wno-dev \
 		-DCMAKE_BUILD_TYPE=Release \
 		-DCMAKE_C_FLAGS="-fPIC -w" \
