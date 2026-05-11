@@ -44,7 +44,7 @@ Combining these abbreviations, you get:
 | CALS            | rwv            | rwv             | rwv            | ✗              | ✗               | ✗              |
 | CEOS            | rov            | rov             | rov            | ✗              | ✗               | ✗              |
 | COASP           | ro             | ro              | ro             | ✗              | ✗               | ✗              |
-| COG             | wv             | wv              | wv             | ✗              | ✗               | ✗              |
+| COG             | w+v            | w+v             | w+v            | ✗              | ✗               | ✗              |
 | COSAR           | rov            | rov             | rov            | ✗              | ✗               | ✗              |
 | CPG             | rov            | rov             | rov            | ✗              | ✗               | ✗              |
 | CSV             | ✗              | ✗               | ✗              | rw+uv          | rw+uv           | rw+uv          |
@@ -59,6 +59,7 @@ Combining these abbreviations, you get:
 | DOQ2            | rov            | rov             | rov            | ✗              | ✗               | ✗              |
 | DTED            | rwv            | rwv             | rwv            | ✗              | ✗               | ✗              |
 | DXF             | ✗              | ✗               | ✗              | rw+v           | rw+v            | rw+v           |
+| E57             | rovs           | rovs            | rovs           | ✗              | ✗               | ✗              |
 | ECRGTOC         | rovs           | rovs            | rovs           | ✗              | ✗               | ✗              |
 | EDIGEO          | ✗              | ✗               | ✗              | rov            | rov             | rov            |
 | EEDA            | ✗              | ✗               | ✗              | ro             | ro              | ro             |
@@ -140,7 +141,7 @@ Combining these abbreviations, you get:
 | MSSQLSpatial    | ✗              | ✗               | ✗              | rw+u           | rw+u            | rw+u           |
 | MVT             | ✗              | ✗               | ✗              | rw+v           | rw+v            | rw+v           |
 | MapML           | ✗              | ✗               | ✗              | rw+v           | rw+v            | rw+v           |
-| MiraMonRaster   | rovs           | rovs            | rovs           | ✗              | ✗               | ✗              |
+| MiraMonRaster   | rwvs           | rwvs            | rwvs           | ✗              | ✗               | ✗              |
 | MiraMonVector   | ✗              | ✗               | ✗              | rw+v           | rw+v            | rw+v           |
 | MySQL           | ✗              | ✗               | ✗              | rw+u           | rw+u            | rw+u           |
 | NAS             | ✗              | ✗               | ✗              | rov            | rov             | rov            |
@@ -187,9 +188,9 @@ Combining these abbreviations, you get:
 | RRASTER         | rw+uv          | rw+uv           | rw+uv          | ✗              | ✗               | ✗              |
 | RS2             | rovs           | rovs            | rovs           | ✗              | ✗               | ✗              |
 | RST             | rw+v           | rw+v            | rw+v           | ✗              | ✗               | ✗              |
-| S102            | rovs           | rovs            | rovs           | ✗              | ✗               | ✗              |
-| S104            | rovs           | rovs            | rovs           | ✗              | ✗               | ✗              |
-| S111            | rovs           | rovs            | rovs           | ✗              | ✗               | ✗              |
+| S102            | rwvs           | rwvs            | rwvs           | ✗              | ✗               | ✗              |
+| S104            | rwvs           | rwvs            | rwvs           | ✗              | ✗               | ✗              |
+| S111            | rwvs           | rwvs            | rwvs           | ✗              | ✗               | ✗              |
 | S57             | ✗              | ✗               | ✗              | rw+v           | rw+v            | rw+v           |
 | SAFE            | rov            | rov             | rov            | ✗              | ✗               | ✗              |
 | SAGA            | rw+v           | rw+v            | rw+v           | ✗              | ✗               | ✗              |
@@ -206,6 +207,7 @@ Combining these abbreviations, you get:
 | SXF             | ✗              | ✗               | ✗              | rov            | rov             | rov            |
 | Selafin         | ✗              | ✗               | ✗              | rw+v           | rw+v            | rw+v           |
 | TGA             | rov            | rov             | rov            | ✗              | ✗               | ✗              |
+| TIGER           | ✗              | ✗               | ✗              | rov            | rov             | rov            |
 | TIL             | rov            | rov             | rov            | ✗              | ✗               | ✗              |
 | TSX             | rov            | rov             | rov            | ✗              | ✗               | ✗              |
 | Terragen        | rw+v           | rw+v            | rw+v           | ✗              | ✗               | ✗              |
